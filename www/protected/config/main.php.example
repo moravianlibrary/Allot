@@ -1,0 +1,114 @@
+<?php
+
+// uncomment the following to define a path alias
+// Yii::setPathOfAlias('local','path/to/local-folder');
+
+// This is the main Web application configuration. Any writable
+// CWebApplication properties can be configured here.
+return array(
+	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+	'name'=>'Allot - elektronický systém zápůjček',
+	'sourceLanguage'=>'en',
+	'language'=>'cs',
+	
+	'aliases'=>array(
+		'wsext'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'yii-1.1'.DIRECTORY_SEPARATOR.'extensions',
+	),
+
+	// preloading 'log' component
+	'preload'=>array('log'),
+
+	// autoloading model and component classes
+	'import'=>array(
+		'application.models.*',
+		'application.components.*',
+		'application.extensions.*',
+		'wsext.*',
+		'wsext.cmpdate.cmpdate',
+                'zii.widgets.jui.*',
+	),
+
+	'modules'=>array(
+		'rbam'=>array(
+			// RBAM Configuration
+			//'initialise'=>true,
+			'applicationLayout'=>'application.views.layouts.column2',
+			'showMenu'=>false,
+		),
+	),
+
+	// application components
+	'components'=>array(
+		'user'=>array(
+			// enable cookie-based authentication
+			'allowAutoLogin'=>false,
+		),
+		// uncomment the following to enable URLs in path-format
+		/*
+		'urlManager'=>array(
+			'urlFormat'=>'path',
+			'rules'=>array(
+				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+			),
+		),
+		*/
+		/*
+		'db'=>array(
+			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
+		),
+		*/
+		// uncomment the following to use a MySQL database
+		'db'=>array(
+			'connectionString' => 'mysql:host=localhost;dbname=allot',
+			'emulatePrepare' => true,
+			'username' => 'username',
+			'password' => 'password',
+			'charset' => 'utf8',
+			'tablePrefix' => 'yii_',
+			'schemaCachingDuration' => 3600,
+		),
+		'authManager'=>array(
+            'class'=>'CDbAuthManager',
+            'connectionID'=>'db',
+            'assignmentTable'=>'yii_auth_assignment',
+            'itemChildTable'=>'yii_auth_itemchild',
+            'itemTable'=>'yii_auth_item',
+        ),
+       'errorHandler'=>array(
+			// use 'site/error' action to display errors
+            'errorAction'=>'site/error',
+        ),
+		'log'=>array(
+			'class'=>'CLogRouter',
+			'routes'=>array(
+				array(
+					'class'=>'CFileLogRoute',
+					'levels'=>'error, warning, info',
+				),
+				/*
+				array(
+						'class'=>'CProfileLogRoute',
+						'report'=>'summary',
+				),
+				*/
+				// uncomment the following to show log messages on web pages
+				/*
+				array(
+					'class'=>'CWebLogRoute',
+				),
+				*/
+			),
+		),
+	),
+
+	// application-level parameters that can be accessed
+	// using Yii::app()->params['paramName']
+	'params'=>array(
+		'adminEmail'=>'admin@example.org',
+		'ldap_server'=>'ldap.example.org',
+		'ldap_users_dn'=>'ou=people,dc=example,dc=org',
+		'ldap_groups_dn'=>'ou=group,dc=example,dc=org',
+	),
+);
