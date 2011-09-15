@@ -1,0 +1,38 @@
+body, p, div, td, th {font: 10pt Arial, Helvetica, sans-serif; color: black;}
+table, tr, td, th, thead td {border-collapse: collapse; border: 1px solid black;}
+th, thead td, td.h {background: #dddddd; padding: 3px; font-weight: bold;}
+th, thead td {text-align: center;}
+td {padding: 3px;}
+h1 {font-size: 16pt; margin: 10px 0px; text-align: center;}
+#ordersheet h1 {font-size: 14pt; margin: 14px 0px; padding: 0px; text-align: left;}
+h2 {font-size: 14pt; margin: 10px 0px; padding: 0px; text-align: left;}
+hr {border: none; height: 2px; line-height: 2px; color: black; background-color: black;}
+hr.red {border: none; height: 2px; line-height: 2px; color: red; background-color: red;}
+
+
+.left {float: left !important;}
+.right {float: right !important;}
+.clear {clear: both;}
+.noborder, .noborder tr, .noborder td, .noborder th {border: 0px;}
+ul.nomargin, li.nomargin {margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;}
+.b, table.b td, tr.b td {font-weight: bold;}
+.note {font-size: 8pt; text-align: justify;}
+#ordersheet td {font-size: 9pt;}
+#ordersheet .contractor {float: right;}
+#ordersheet .contractor, #ordersheet .contractor tr, #ordersheet .contractor td, #ordersheet .contractor th {border: 0px;}
+#ordersheet .contractor td {padding: 0px; font-size: 8pt;}
+fieldset
+{
+	border: 1px solid #DDD;
+	padding: 10px;
+	margin: 0 0 10px 0;
+    -moz-border-radius:7px;
+}
+
+legend
+{
+	padding: 0px 7px;
+    font-weight: bold;
+}
+
+
