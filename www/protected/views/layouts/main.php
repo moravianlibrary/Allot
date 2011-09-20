@@ -57,7 +57,7 @@
 	}
 	?>
 	<div id="header">
-		<div id="logo"><?php echo CHtml::encode(Yii::app()->name); ?></div>
+		<div id="logo"><?php echo CHtml::link(CHtml::encode(Yii::app()->name), Yii::app()->createUrl('/site/page', array('view'=>'about'))); ?></div>
 		<?if (!Yii::app()->user->isGuest) {?><div id="username"><?php echo Yii::t('app', 'User'); ?>: <?php echo CHtml::encode(user()->full_name); ?> | <?echo CHtml::link(Yii::t('app', 'Logout'), array('/site/logout'))?></div><?}?>
 		<div class="clear"></div>
 	</div><!-- header -->

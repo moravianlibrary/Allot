@@ -233,6 +233,12 @@ div.search-form
 	float: left;
 }
 
+#logo a
+{
+	color: #555555;
+	text-decoration: none;
+}
+
 #username
 {
 	padding: 18px 20px;
