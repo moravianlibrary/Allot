@@ -15,10 +15,11 @@ class Building extends ActiveRecord
 	public function rules()
 	{
 		return array(
-			array('name, street, land_registry_number, house_number, postal_code, city', 'required'),
-			array('land_registry_number, house_number, postal_code', 'numerical', 'integerOnly'=>true),
+			array('name, postal_code, city', 'required'),
+			array('land_registry_number, postal_code', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 			array('street, city', 'length', 'max'=>64),
+			array('house_number', 'length', 'max'=>5),
 			array('postal_code', 'length', 'max'=>5),
 			array('description', 'safe'),
 			array('name, street, land_registry_number, house_number, postal_code, city', 'safe', 'on'=>'search'),
