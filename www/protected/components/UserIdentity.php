@@ -4,8 +4,10 @@ class UserIdentity extends CUserIdentity
 	private $_id;
 	private $firstname;
 	private $lastname;
+	private $email;
 	private $full_name;
 	private $ds = null;
+	private $dn = null;
 
     public function authenticate()
     {
@@ -17,22 +19,27 @@ class UserIdentity extends CUserIdentity
 		}
 		if ($this->ds)
 		{
-			try
+			$this->searchUser();
+			if ($this->dn !== null)
 			{
-				$r = @ldap_bind($this->ds, 'uid='.$this->username.','.param('ldap_users_dn'), $this->password);
-			}
-			catch (Exception $e)
-			{
-				$this->errorCode=self::ERROR_PASSWORD_INVALID;
-			}
-			if ($r)
-			{
-				$this->errorCode=self::ERROR_NONE;
-				$this->refreshUser();
-				$this->setState('firstname', $this->firstname);
-				$this->setState('lastname', $this->lastname);
-				$this->setState('full_name', $this->full_name);
-				$this->setState('active_tab', '');
+				try
+				{
+					$r = @ldap_bind($this->ds, $this->dn, $this->password);
+				}
+				catch (Exception $e)
+				{
+					$this->errorCode=self::ERROR_PASSWORD_INVALID;
+				}
+				if ($r)
+				{
+					$this->errorCode=self::ERROR_NONE;
+					$this->refreshUser();
+					$this->setState('firstname', $this->firstname);
+					$this->setState('lastname', $this->lastname);
+					$this->setState('full_name', $this->full_name);
+					$this->setState('active_tab', '');
+				}
+				else $this->errorCode=self::ERROR_PASSWORD_INVALID;
 			}
 			else $this->errorCode=self::ERROR_PASSWORD_INVALID;
 			ldap_close($this->ds);
@@ -48,27 +55,18 @@ class UserIdentity extends CUserIdentity
     
     protected function refreshUser()
     {
-		$entry = $this->readLdapEntry();
-
 		$user=User::model()->find('username=?', array($this->username));
 		if ($user === null)
 		{
 			$user = new User;
 			$user->username = $this->username;
-			$user->firstname = $entry[0]['givenname'][0];
-			$user->lastname = $entry[0]['sn'][0];
-			$user->email = $entry[0]['mail'][0];
 		}
-		else
-		{
-			$user->firstname = $entry[0]['givenname'][0];
-			$user->lastname = $entry[0]['sn'][0];
-			$user->email = $entry[0]['mail'][0];			
-		}
+		$user->firstname = $this->firstname;
+		$user->lastname = $this->lastname;
+		$user->email = $this->email;			
 		$user->save();
+		
 		$this->_id = $user->id;		
-		$this->firstname = $user->firstname;
-		$this->lastname = $user->lastname;
 		$this->full_name = $user->full_name;
 		
 		$this->refreshPerms();
@@ -98,10 +96,20 @@ class UserIdentity extends CUserIdentity
 		am()->save();
     }
     
-    protected function readLdapEntry()
+    protected function searchUser()
     {
-		$sr = ldap_read($this->ds, 'uid='.$this->username.','.param('ldap_users_dn'), '(objectclass=*)', array('givenname', 'sn', 'mail'));
-		return ldap_get_entries($this->ds, $sr);
+		$sr = ldap_search($this->ds, param('ldap_users_dn'), '(uid='.$this->username.')', array('givenname', 'sn', 'mail'));
+		if ($sr)
+		{
+			$entries = ldap_get_entries($this->ds, $sr);
+			if ($entries['count'] == 1)
+			{
+				$this->dn = $entries[0]['dn'];
+				$this->firstname = $entries[0]['givenname'][0];
+				$this->lastname = $entries[0]['sn'][0];			
+				$this->email = $entries[0]['mail'][0];
+			}
+		}
     }
     
     protected function checkGroup($group)
