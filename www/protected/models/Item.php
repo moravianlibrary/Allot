@@ -21,6 +21,7 @@ class Item extends ActiveRecord
 			array('number', 'length', 'max'=>32),
 			array('name', 'length', 'max'=>64),
 			array('itemtype_id, count', 'numerical', 'integerOnly'=>true),
+			array('count', 'compare', 'compareAttribute'=>'allotted', 'operator'=>'>='),
 			array('itemtype_id', 'exist', 'className'=>'ItemType', 'attributeName'=>'id'),
 			array('description', 'safe'),
 			array('itemtype_id, itemcategory_id, number, name', 'safe', 'on'=>'search'),
