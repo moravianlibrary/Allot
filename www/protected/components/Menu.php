@@ -81,6 +81,8 @@ class Menu
 				}
 			}
 		}
+		$this->insertItem('Item:Create', 'key', '/item/create', 'Create Key');
+		$this->insertItem('Item:Create', 'lock', '/item/create', 'Create Lock');
 	}
 	
 	public function insertItems($items, $type = '_main')
