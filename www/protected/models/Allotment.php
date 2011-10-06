@@ -7,6 +7,7 @@ class Allotment extends ActiveRecord
 	protected $_oldItem_id = 0;
 	protected $_oldCount = 0;
 	protected $_oldReturnDate = '';
+	public $userName = '';
 	
 	public static function model($className=__CLASS__)
 	{
@@ -31,9 +32,8 @@ class Allotment extends ActiveRecord
 	public function rules()
 	{
 		return array(
-			array('user_id, item_id, count, allotment_date', 'required'),
-			array('user_id, item_id', 'numerical', 'integerOnly'=>true),
-			array('user_id', 'exist', 'className'=>'User', 'attributeName'=>'id'),
+			array('item_id, count, allotment_date', 'required'),
+			array('item_id', 'numerical', 'integerOnly'=>true),
 			array('item_id', 'exist', 'className'=>'Item', 'attributeName'=>'id'),
 			array('count', 'numerical', 'integerOnly'=>true, 'min'=>1),
 			array('count', 'itemCount'),
@@ -150,6 +150,7 @@ class Allotment extends ActiveRecord
 		$this->_oldItem_id = $this->item_id;
 		$this->_oldCount = $this->count;		
 		$this->_oldReturnDate = $this->return_date;
+		$this->userName = $this->user->username;
 	}
 	
 	public function getDestroyed()

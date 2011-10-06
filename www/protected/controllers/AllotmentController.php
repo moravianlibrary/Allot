@@ -19,9 +19,14 @@ class AllotmentController extends Controller
 	public function actionCreate()
 	{
 		$model=new Allotment;
-
+		
 		if (isset($_GET['item_id'])) $model->item_id = $_GET['item_id'];
-
+		
+		if (isset($_POST['Allotment']))
+		{
+			$model->user_id = $this->refreshUser($_POST['Allotment']['userName']);
+		}
+		
 		if (req()->isAjaxRequest)
 		{
 			$this->ajaxEditForm($model, array());
@@ -46,6 +51,11 @@ class AllotmentController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+
+		if (isset($_POST['Allotment']))
+		{
+			$model->user_id = $this->refreshUser($_POST['Allotment']['userName']);
+		}
 
 		if (req()->isAjaxRequest)
 		{
@@ -123,13 +133,89 @@ class AllotmentController extends Controller
 		}
 	}
 	
+	/*
 	public function actionFindUser()
 	{
 		$this->autoCompleteFind('User', 'CONCAT(firstname, \' \', lastname)', 'full_name');
 	}	
+	*/
+	public function actionFindUser()
+	{
+		$term = $_GET['term'];
+		if (isset($term))
+		{
+			$ds = $this->ldapConnect();
+			if ($ds)
+			{
+				$sr = ldap_search($ds, param('ldap_users_dn'), '(|(sn=*'.$term.'*)(givenname=*'.$term.'*))', array('uid', 'givenname', 'sn'));
+				if ($sr)
+				{
+					$entries = ldap_get_entries($ds, $sr);
+					$out = array();
+					foreach ($entries as $entry)
+					{
+						$out[] = array(
+						'label' => $entry['givenname'][0].' '.$entry['sn'][0],  
+						'value' => $entry['givenname'][0].' '.$entry['sn'][0],
+						'id' => $entry['uid'][0], // return value from autocomplete
+						);
+					}
+					echo CJSON::encode($out);
+					Yii::app()->end();
+				}
+				ldap_close($ds);
+				$ds = null;
+			}
+		}
+	}
 	
 	public function actionFindItem()
 	{
 		$this->autoCompleteFind('Item', 'CONCAT(number, \' \', name)', 'longname', array('condition'=>array(array('(count-allotted)', '>0', false))));
+	}
+	
+	public function refreshUser($userName)
+	{
+		$user = User::model()->findByAttributes(array('username'=>$userName));
+		if ($user === null)
+			$user = new User;
+
+		$ds = $this->ldapConnect();
+		if ($ds)
+		{
+			$sr = ldap_search($ds, param('ldap_users_dn'), '(uid='.$userName.')', array('uid', 'givenname', 'sn', 'mail'));
+			if ($sr)
+			{
+				$entries = ldap_get_entries($ds, $sr);
+				if ($entries['count'] == 1)
+				{
+					$user->username = $entries[0]['uid'][0];
+					$user->firstname = $entries[0]['givenname'][0];
+					$user->lastname = $entries[0]['sn'][0];			
+					$user->email = $entries[0]['mail'][0];
+				}
+			}
+			ldap_close($ds);
+			$ds = null;
+		}
+		
+		if ($user !== null)
+		{
+			$user->save();
+			return $user->id;
+		}
+		else
+		{
+			user()->setFlash('error.refresh_user', t('Error during user assignment.'));
+			return 0;
+		}
+	}
+	
+	public function ldapConnect()
+	{
+		$ds = ldap_connect(param('ldap_server'));
+		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+		return $ds;
 	}
 }

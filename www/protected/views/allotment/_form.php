@@ -17,7 +17,7 @@ $this->widget('wsext.JuiDialogForm', array('model'=>'Item', 'success'=>"\$('#All
 		<?
 		$this->widget('wsext.EJuiAutoCompleteFkField', array(
 			'model'=>$model, 
-			'attribute'=>'user_id',
+			'attribute'=>'userName',
 			'sourceUrl'=>array('findUser'), 
 			'relName'=>'user',
 			'displayAttr'=>'full_name',

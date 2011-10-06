@@ -105,6 +105,7 @@ return array(
 	'Error while creating extended record.'=>'Došlo k chybě při vytváření rozšířeného záznamu.',
 	'{attribute} must be must be less than or equal to ammount of remaining items.'=>'Hodnota {attribute} musí být menší nebo rovna počtu zbývajících předmětů.',
 	'Updating {attribute} is not possible.'=>'Nelze změnit hodnotu {attribute}.',
+	'Error during user assignment.'=>'Došlo k chybě při přiřazení uživatele.',
 
 	// Item
 	'Item'=>'Předmět',
