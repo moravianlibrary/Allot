@@ -4,7 +4,7 @@ class AllotmentController extends Controller
 {
 	public function actionView($id)
 	{
-		$model = $this->loadModel($id);
+		$model=Allotment::model()->my()->findByPk($id);
 		
 		if (req()->isAjaxRequest)
 		{
