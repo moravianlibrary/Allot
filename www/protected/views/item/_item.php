@@ -28,4 +28,8 @@
 	<?php echo CHtml::encode($data->description); ?>
 	<br />
 
+	<b><?php echo CHtml::encode(t('Allotments')); ?>:</b>
+	<?php echo CHtml::link(t('Create Allotment'), array('allotment/create', 'item_id'=>$data->id)); ?>
+	<br />
+
 </div>

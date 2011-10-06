@@ -44,5 +44,12 @@ $this->widget('wsext.JuiDialogForm', array('model'=>'ItemCategory'));
 			'name'=>'remaining',
 			'filter'=>false,
 		),
+		array(
+			'header'=>t('Create Allotment'),
+			'value'=>'($data->remaining > 0 ? CHtml::link(\'<img src="'.asm()->getPublishedUrl(Yii::getPathOfAlias('zii.widgets.assets')).'/gridview/update.png">\',  array(\'allotment/create\', \'item_id\'=>$data->id)) : \'\')',
+			'type'=>'raw',
+			'filter'=>false,
+			'htmlOptions'=>array('style'=>'text-align: center;'),
+		),
 	),
 )); ?>

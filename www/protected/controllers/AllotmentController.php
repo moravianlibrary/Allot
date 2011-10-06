@@ -20,6 +20,8 @@ class AllotmentController extends Controller
 	{
 		$model=new Allotment;
 
+		if (isset($_GET['item_id'])) $model->item_id = $_GET['item_id'];
+
 		if (req()->isAjaxRequest)
 		{
 			$this->ajaxEditForm($model, array());
