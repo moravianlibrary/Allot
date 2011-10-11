@@ -66,9 +66,9 @@ class Controller extends CController
 						$m = $model;
 						foreach ($attrs as $a)
 							$m = $m->$a;
-						$retData = $m;
-						for ($i = sizeof($attrs) - 1; $i >= 0; $i--)
-							$retData = array($attrs[$i] => $retData);
+						for ($i = sizeof($attrs) - 1; $i > 0; $i--)
+							$m = array($attrs[$i] => $m);
+						$retData[$attrs[0]] = $m;
 					}
 				}
 			}

@@ -24,7 +24,9 @@ class AllotmentController extends Controller
 		
 		if (isset($_POST['Allotment']))
 		{
-			$model->user_id = $this->refreshUser($_POST['Allotment']['userName']);
+			$model->userName = $_POST['Allotment']['userName'];
+			$model->user_id = $this->refreshUser($model->userName);
+			$model->user = User::model()->findByPk($model->user_id);
 		}
 		
 		if (req()->isAjaxRequest)
@@ -54,7 +56,9 @@ class AllotmentController extends Controller
 
 		if (isset($_POST['Allotment']))
 		{
-			$model->user_id = $this->refreshUser($_POST['Allotment']['userName']);
+			$model->userName = $_POST['Allotment']['userName'];
+			$model->user_id = $this->refreshUser($model->userName);
+			$model->user = User::model()->findByPk($model->user_id);
 		}
 
 		if (req()->isAjaxRequest)
