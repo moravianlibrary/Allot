@@ -1,7 +1,7 @@
 <?
 class Menu
 {
-	public static $mainMenuItems = array('Allotment', 'Item', 'Key', 'Lock', 'Door', 'Building', 'ItemType', 'ItemCategory');
+	public static $mainMenuItems = array('Allotment', 'Item', 'Key', 'Lock', 'Door', 'Room', 'Building', 'ItemType', 'ItemCategory');
 	
 	private $_items = array();
 	private $moduleId = '';
@@ -80,7 +80,7 @@ class Menu
 					}
 				}
 			}
-		}
+		}		
 		$this->insertItem('Item:Create', 'key', '/item/create', 'Create Key');
 		$this->insertItem('Item:Create', 'lock', '/item/create', 'Create Lock');
 	}

@@ -1,6 +1,6 @@
 <?php
 
-class DoorController extends Controller
+class RoomController extends Controller
 {
 	public function actionView($id)
 	{
@@ -18,14 +18,12 @@ class DoorController extends Controller
 
 	public function actionCreate()
 	{
-		$model=new Door;
+		$model=new Room;
 
-		if(isset($_POST['Door']))
+		if(isset($_POST['Room']))
 		{
-			$locks = isset($_POST['Door']['locks']) ? $_POST['Door']['locks'] : array();
-			$model->locks=$locks;
-			$rooms = isset($_POST['Door']['rooms']) ? $_POST['Door']['rooms'] : array();
-			$model->rooms=$rooms;
+			$doors = isset($_POST['Room']['doors']) ? $_POST['Room']['doors'] : array();
+			$model->doors=$doors;
 		}
 			
 		if (req()->isAjaxRequest)
@@ -34,9 +32,9 @@ class DoorController extends Controller
 		}
 		else
 		{
-			if(isset($_POST['Door']))
+			if(isset($_POST['Room']))
 			{
-				$model->attributes=$_POST['Door'];
+				$model->attributes=$_POST['Room'];
 				if($model->save())
 					$this->redirect(array('admin'));
 				else
@@ -53,12 +51,10 @@ class DoorController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		if(isset($_POST['Door']))
+		if(isset($_POST['Room']))
 		{
-			$locks = isset($_POST['Door']['locks']) ? $_POST['Door']['locks'] : array();
-			$model->locks=$locks;
-			$rooms = isset($_POST['Door']['rooms']) ? $_POST['Door']['rooms'] : array();
-			$model->rooms=$rooms;
+			$doors = isset($_POST['Room']['doors']) ? $_POST['Room']['doors'] : array();
+			$model->doors=$doors;
 		}
 			
 		if (req()->isAjaxRequest)
@@ -67,9 +63,9 @@ class DoorController extends Controller
 		}
 		else
 		{
-			if(isset($_POST['Door']))
+			if(isset($_POST['Room']))
 			{
-				$model->attributes=$_POST['Door'];
+				$model->attributes=$_POST['Room'];
 				if($model->save())
 					$this->redirect(array('admin'));
 				else
@@ -102,7 +98,7 @@ class DoorController extends Controller
 
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Door');
+		$dataProvider=new CActiveDataProvider('Room');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -110,10 +106,10 @@ class DoorController extends Controller
 
 	public function actionAdmin()
 	{
-		$model=new Door('search');
+		$model=new Room('search');
 		$model->unsetAttributes();
-		if(isset($_GET['Door']))
-			$model->attributes=$_GET['Door'];
+		if(isset($_GET['Room']))
+			$model->attributes=$_GET['Room'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -122,7 +118,7 @@ class DoorController extends Controller
 
 	public function loadModel($id)
 	{
-		$model=Door::model()->findByPk($id);
+		$model=Room::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,Yii::t('app', 'The requested page does not exist.'));
 		return $model;
@@ -130,7 +126,7 @@ class DoorController extends Controller
 
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='door-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='room-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

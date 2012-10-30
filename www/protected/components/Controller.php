@@ -23,7 +23,9 @@ class Controller extends CController
 				{
 					$id = (int) $_GET['id'];
 					$user_id = 0;
-					$model = CActiveRecord::model($modelClass)->resetScope()->findByPk($id);
+					//$model = $modelClass::model()->resetScope()->findByPk($id);
+					//$model = call_user_func(array($modelClass, 'model'))->resetScope()->findByPk($id);
+					$model = ActiveRecord::model($modelClass)->resetScope()->findByPk($id);
 					if($model===null) throw new CHttpException(404, Yii::t('app', 'The requested page does not exist.'));
 					if (isset($model->user_id))
 					{
@@ -129,7 +131,10 @@ class Controller extends CController
 			$criteria->order = $field;
 			$criteria->limit = 20;
 			if (isset($extraCrits['with'])) $criteria->with = $extraCrits['with'];
-			$model = CActiveRecord::model($modelClass)->findAll($criteria);
+			//$model = $modelClass::model()->findAll($criteria);
+			//$model = call_user_func(array($modelClass, 'model'))->findAll($criteria);
+			$model = ActiveRecord::model($modelClass)->findAll($criteria);
+
 			if (!empty($model)) 
 			{
 				$out = array();

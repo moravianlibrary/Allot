@@ -67,5 +67,4 @@ class Building extends ActiveRecord
 			'pagination'=>array('pageSize'=>20,),
 		));
 	}
-
 }

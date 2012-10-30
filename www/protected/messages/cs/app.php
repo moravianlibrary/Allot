@@ -66,7 +66,7 @@ return array(
 	'Filter'=>'Filtr',
 	'Apply'=>'Použít',
 	'Letter'=>'Dopis',
-	
+
 	// LoginForm
 	'Remember me next time'=>'Zapamatovat přihlášení',
 	'Incorrect username or password.'=>'Nesprávné uživatelské jméno nebo heslo.',
@@ -77,18 +77,18 @@ return array(
 	'Users'=>'Uživatelé',
 	'users'=>'uživatelé',
 	'Manage Users'=>'Správa uživatelů',
-	'View Users'=>'Přehled uživatelů',	
+	'View Users'=>'Přehled uživatelů',
 	'Create User'=>'Nový uživatel',
 	'Update User'=>'Editace uživatele',
-	'View User'=>'Detail uživatele',	
-	'Delete User'=>'Odstranění uživatele',	
+	'View User'=>'Detail uživatele',
+	'Delete User'=>'Odstranění uživatele',
 	'Password Repeat'=>'Heslo (pro kontrolu)',
 	'Salt'=>'Sůl',
 	'Title before Name'=>'Titul před jménem',
 	'Firstname'=>'Jméno',
 	'Lastname'=>'Příjmení',
 	'Title after Name'=>'Titul za jménem',
-	
+
 	// Allotment
 	'Allotment'=>'Zápůjčka',
 	'Allotments'=>'Zápůjčky',
@@ -117,7 +117,7 @@ return array(
 	'View Item'=>'Detail předmětu',
 	'Delete Item'=>'Odstranění předmětu',
 	'Allotted'=>'Zapůjčeno',
-	
+
 	// Key
 	'Key'=>'Klíč',
 	'Keys'=>'Klíče',
@@ -128,7 +128,7 @@ return array(
 	'View Key'=>'Detail klíče',
 	'Delete Key'=>'Odstranění klíče',
 	'Locks, that can be opened by the key'=>'Zámkové vložky, které lze odemknout tímto klíčem',
-	
+
 	// Lock
 	'Lock'=>'Zámková vložka',
 	'Locks'=>'Zámkové vložky',
@@ -140,7 +140,7 @@ return array(
 	'Delete Lock'=>'Odstranění zámkové vložky',
 	'Keys, that the lock can be opened with'=>'Klíče, kterými lze odemknout tuto zámkovou vložku',
 	'Lock in door'=>'Dveře, ve kterých je tato zámková vložka',
-	
+
 	// ItemCategory
 	'Item Category'=>'Kategorie předmětů',
 	'Item Categories'=>'Kategorie předmětů',
@@ -153,7 +153,7 @@ return array(
 	'Delete Item Category'=>'Odstranění kategorie předmětů',
 	'Ext Table'=>'Rozšířená tabulka',
 	'Generic item type was created.'=>'Současně byl vytvořen generický typ předmětů.',
-	
+
 	// ItemType
 	'Item Type'=>'Typ předmětů',
 	'Item Types'=>'Typy předmětů',
@@ -164,7 +164,7 @@ return array(
 	'Update Item Type'=>'Editace typu předmětů',
 	'View Item Type'=>'Detail typu předmětů',
 	'Delete Item Type'=>'Odstranění typu předmětů',
-	
+
 	// Door
 	'Door'=>'Dveře',
 	'Doors'=>'Dveře',
@@ -172,21 +172,33 @@ return array(
 	'View Doors'=>'Přehled dveří',
 	'Create Door'=>'Nové dveře',
 	'Update Door'=>'Editace dveří',
-	'View Door'=>'Detail dveří',	
-	'Delete Door'=>'Odstranění dveří',	
-	'Floor' => 'Podlaží',
+	'View Door'=>'Detail dveří',
+	'Delete Door'=>'Odstranění dveří',
 	'Locks in door' => 'Zámkové vložky, které jsou v těchto dveřích',
+	'Rooms, that are connected by door'=>'Místnosti, které jsou propojeny těmito dveřmi',
+
+	// Room
+	'Room'=>'Místnost',
+	'Rooms'=>'Místnosti',
+	'Manage Rooms'=>'Správa místností',
+	'View Rooms'=>'Přehled místností',
+	'Create Room'=>'Nová místnost',
+	'Update Room'=>'Editace místnosti',
+	'View Room'=>'Detail místnosti',
+	'Delete Room'=>'Odstranění místnosti',
+	'Floor' => 'Podlaží',
+	'Doors in room' => 'Dveře v místnosti',
 
 	// Building
 	'Building'=>'Budova',
 	'Buildings'=>'Budovy',
-	'buildings'=>'budovy',	
+	'buildings'=>'budovy',
 	'Manage Buildings'=>'Správa budov',
 	'View Buildings'=>'Přehled budov',
 	'Create Building'=>'Nová budova',
 	'Update Building'=>'Editace budovy',
-	'View Building'=>'Detail budovy',	
-	'Delete Building'=>'Odstranění budovy',	
+	'View Building'=>'Detail budovy',
+	'Delete Building'=>'Odstranění budovy',
 	'Street'=>'Ulice',
 	'Land Registry Number'=>'Číslo popisné',
 	'House Number'=>'Číslo orientační',

@@ -1,6 +1,6 @@
 <?php
 
-class Door extends ActiveRecord
+class Room extends ActiveRecord
 {
 	public static function model($className=__CLASS__)
 	{
@@ -9,25 +9,27 @@ class Door extends ActiveRecord
 
 	public function tableName()
 	{
-		return '{{door}}';
+		return '{{room}}';
 	}
 
 	public function rules()
 	{
 		return array(
-			array('number, name', 'required'),
+			array('number, name, floor, building_id', 'required'),
 			array('number', 'length', 'max'=>32),
 			array('name', 'length', 'max'=>64),
+			array('floor, building_id', 'numerical', 'integerOnly'=>true),
+			array('building_id', 'exist', 'className'=>'Building', 'attributeName'=>'id'),
 			array('description', 'safe'),
-			array('number, name', 'safe', 'on'=>'search'),
+			array('number, name, floor', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations()
 	{
 		return array(
-			'locks' => array(self::MANY_MANY, 'Lock', '{{door_lock}}(door_id, lock_id)'),
-			'rooms' => array(self::MANY_MANY, 'Room', '{{room_door}}(door_id, room_id)'),
+			'building' => array(self::BELONGS_TO, 'Building', 'building_id'),
+			'doors' => array(self::MANY_MANY, 'Door', '{{room_door}}(room_id, door_id)'),
 		);
 	}
 
@@ -39,9 +41,11 @@ class Door extends ActiveRecord
 			'modify_time' =>  Yii::t('app', 'Modify Time'),
 			'number' => Yii::t('app', 'Number'),
 			'name' => Yii::t('app', 'Name'),
+			'floor' => Yii::t('app', 'Floor'),
+			'building_id' => Yii::t('app', 'Building'),
 			'description' => Yii::t('app', 'Description'),
-			'locks' => Yii::t('app', 'Locks in door'),
-			'rooms' => Yii::t('app', 'Rooms, that are connected by door'),
+			'doors' => Yii::t('app', 'Doors in room'),
+			'building_name' => Yii::t('app', 'Building'),
 		);
 	}
 
@@ -51,13 +55,20 @@ class Door extends ActiveRecord
 
 		$criteria->compare('number',$this->number,true);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('building_id',$this->building_id);
+		$criteria->compare('floor',$this->floor);
+		$criteria->with = array('building');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'sort'=>array(
 				'defaultOrder'=>'number',				
 				'attributes'=>array(
-					'number','name',
+					'number','name','floor',
+					'building_id'=>array(
+						'asc'=>'building.name',
+						'desc'=>'building.name desc',
+						),
 					),
 				),
 			'pagination'=>array('pageSize'=>20,),
@@ -76,5 +87,10 @@ class Door extends ActiveRecord
 	public function getLongName()
 	{
 		return $this->number.' - '.$this->name;
+	}
+	
+	public function getBuilding_name()
+	{
+		return $this->building->name;
 	}
 }
