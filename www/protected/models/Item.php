@@ -3,7 +3,7 @@
 class Item extends ActiveRecord
 {
 	private $_itemcategory_id = null;
-	
+
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
@@ -92,7 +92,7 @@ class Item extends ActiveRecord
 			'pagination'=>array('pageSize'=>20,),
 		));
 	}
-	
+
 	public function afterSave()
 	{
 		if ($this->isNewRecord)
@@ -108,13 +108,13 @@ class Item extends ActiveRecord
 			}
 		}
 		parent::afterSave();
-	}	
+	}
 
 	public function getLongName()
 	{
 		return $this->number.' - '.$this->name;
 	}
-	
+
 	public function getRemaining()
 	{
 		return $this->count - $this->allotted;
@@ -124,7 +124,7 @@ class Item extends ActiveRecord
 	{
 		return $this->itemType->name;
 	}
-	
+
 	public function getItemCategory_id()
 	{
 		if ($this->_itemcategory_id === null && $this->itemType !== null)
@@ -133,7 +133,7 @@ class Item extends ActiveRecord
 		}
 		return $this->_itemcategory_id;
 	}
-	
+
 	public function setItemCategory_id($value)
 	{
 		$this->_itemcategory_id = $value;

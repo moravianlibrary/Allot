@@ -32,7 +32,7 @@ if ($this->registerScripts)
 					return false;
 				},'url':menu_create_href,'cache':false,'dataType':'json'});
 				return false;
-			});			
+			});
 			",
 			CClientScript::POS_READY);
 		cs()->registerScript($this->dialog_id."-script", "
@@ -44,11 +44,19 @@ if ($this->registerScripts)
 				},'url':\$(this).attr('href'),'cache':false,'dataType':'json'});
 				return false;
 			});
+			jQuery('#".$this->dialog_id."-grid a.view').live('click',function() {
+				jQuery.ajax({'success':function(data) {
+					jQuery('#".$this->dialog_id."-juidialog-content').html(data);
+					jQuery('#".$this->dialog_id."-juidialog').dialog('option', 'modal', true).dialog('open');
+					return false;
+				},'url':\$(this).attr('href'),'cache':false,'dataType':'html'});
+				return false;
+			});
 			",
 			CClientScript::POS_READY);
 	}
 	cs()->registerScript('close'.ucfirst($this->dialog_id).'Dialog-script', "
-		jQuery('#".$this->dialog_id."-form').live('submit',function() {
+		jQuery('#".$this->dialog_id."-juidialog-content form').live('submit',function() {
 			jQuery.ajax({'success': function(data) {
 				if (data.status == 'OK')
 				{
@@ -59,7 +67,7 @@ if ($this->registerScripts)
 					{
 						jQuery('#flash-common-success div').html(data.msg);
 						jQuery('#flash-common-success').dialog({show:'fade', hide:'puff', modal:true, title:'".Yii::t('app', 'Information')."', autoOpen:true, width:400, minHeight:50, buttons:{'Ok':function(){\$(this).dialog('close');}}});
-					}					
+					}
 				}
 				else
 				{
@@ -71,7 +79,7 @@ if ($this->registerScripts)
 					}
 				}
 				return false;
-			},'type':'POST','url':jQuery('#".$this->dialog_id."-form').attr('action'),'cache':false,'data':jQuery('#".$this->dialog_id."-form').serialize(),'dataType':'json'});
+			},'type':'POST','url':jQuery(this).attr('action'),'cache':false,'data':jQuery(this).serialize(),'dataType':'json'});
 			return false;
 		});",
 		CClientScript::POS_READY);

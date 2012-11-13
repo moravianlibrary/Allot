@@ -12,38 +12,40 @@ $this->widget('wsext.JuiDialogForm', array('model'=>'Item', 'success'=>"\$('#All
 
 	<?php echo $form->errorSummary($model); ?>
 
+	<?if ($showUserField) {?>
 	<div class="row">
 		<?php echo $form->labelEx($model,'user_id'); ?>
 		<?
 		$this->widget('wsext.EJuiAutoCompleteFkField', array(
-			'model'=>$model, 
+			'model'=>$model,
 			'attribute'=>'userName',
-			'sourceUrl'=>array('findUser'), 
+			'sourceUrl'=>array('findUser'),
 			'relName'=>'user',
 			'displayAttr'=>'full_name',
 			'autoCompleteLength'=>60,
 			'options'=>array(
-				'minLength'=>1, 
+				'minLength'=>1,
 			),
 		));
 		?>
 		<?php echo $form->error($model,'user_id'); ?>
 	</div>
+	<?}?>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'item_id'); ?>
 		<?php
-		if ($model->isNewRecord) 
+		if ($model->isNewRecord)
 		{
 			$this->widget('wsext.EJuiAutoCompleteFkField', array(
-				'model'=>$model, 
+				'model'=>$model,
 				'attribute'=>'item_id',
-				'sourceUrl'=>array('findItem'), 
+				'sourceUrl'=>array('findItem'),
 				'relName'=>'item',
 				'displayAttr'=>'longname',
 				'autoCompleteLength'=>60,
 				'options'=>array(
-					'minLength'=>1, 
+					'minLength'=>1,
 				),
 			));
 			if (user()->checkAccess('ItemAdmin')) $this->widget('wsext.JuiDialogCreateButton', array('model'=>'Item'));

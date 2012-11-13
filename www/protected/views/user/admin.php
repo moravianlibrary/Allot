@@ -14,7 +14,6 @@ $this->pageTitle = Yii::app()->name.' - '.Yii::t('app', 'Manage Users');
 			'class'=>'ButtonColumn',
 			'template'=>'{view}',
 		),
-		'username',
 		'firstname',
 		'lastname',
 		array(

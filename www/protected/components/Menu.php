@@ -1,8 +1,8 @@
 <?
 class Menu
 {
-	public static $mainMenuItems = array('Allotment', 'Item', 'Key', 'Lock', 'Door', 'Room', 'Building', 'ItemType', 'ItemCategory');
-	
+	public static $mainMenuItems = array('User', 'Allotment', 'Item', 'Key', 'Lock', 'Door', 'Room', 'Building', 'ItemType', 'ItemCategory');
+
 	private $_items = array();
 	private $moduleId = '';
 	private $controllerId = '';
@@ -12,7 +12,7 @@ class Menu
 	function __construct($route = '')
 	{
 		$this->route = $route;
-		
+
 		$a = explode('/', $route);
 		if (sizeOf($a) == 1)
 		{
@@ -36,15 +36,14 @@ class Menu
 	{
 		$sp = Yii::app()->getStatePersister();
 		$state = $sp->load();
-		
+
 		// System
 		$this->_items['_main'] = array();
 		$this->insertItems(self::$mainMenuItems);
 		$this->insertItem('Site', '_main', 'setting', 'Settings');
 
-		if ($this->route == 'site/setting' || $this->moduleId == 'rbam' || $this->controllerId == 'user')
+		if ($this->route == 'site/setting' || $this->moduleId == 'rbam')
 		{
-			$this->insertItem('User', '_setting');
 			$this->insertItem('RBAC Manager', '_setting', '/rbam', 'Access permissions');
 			$this->insertItem('Administrator', '_setting', '//myadmin', 'Database', array('target'=>'_blank'));
 		}
@@ -53,7 +52,9 @@ class Menu
 		{
 			$this->_items['rbam'] = app()->getModule('rbam')->getMenuItems();
 		}
-		
+
+		$this->insertItem('User:Print', 'user_print', array('/user/print', 'id'=>Yii::app()->request->getQuery('id')), 'Allotments List', array('target'=>'_blank'));
+
 		// Modules
 		if ($this->moduleId != $this->controllerId)
 		{
@@ -80,34 +81,37 @@ class Menu
 					}
 				}
 			}
-		}		
+		}
 		$this->insertItem('Item:Create', 'key', '/item/create', 'Create Key');
 		$this->insertItem('Item:Create', 'lock', '/item/create', 'Create Lock');
 	}
-	
+
 	public function insertItems($items, $type = '_main')
 	{
-		foreach ($items as $item) $this->insertItem($item, $type);		
+		foreach ($items as $item) $this->insertItem($item, $type);
 	}
-		
+
 	public function insertItem($rights, $type = '_main', $action = 'admin', $title = '', $linkOptions = array(), $accessParams = array())
 	{
 		$model = explode(':', $rights);
 		$modelClass = $model[0];
-		
+
 		if ($title == '') $title = $this->pluralize($this->class2name($modelClass));
-		if (substr($action, 0, 2) == '//')
+		if (!is_array($action))
 		{
-			$action = substr($action, 1);
+			if (substr($action, 0, 2) == '//')
+			{
+				$action = substr($action, 1);
+			}
+			elseif (substr($action, 0, 1) == '/')
+				{
+					$action = array($action);
+				}
+				else
+				{
+					$action = array('/'.$this->class2var($modelClass).'/'.$action);
+				}
 		}
-		elseif (substr($action, 0, 1) == '/')
-			{
-				$action = array($action);
-			}
-			else
-			{
-				$action = array('/'.$this->class2var($modelClass).'/'.$action);
-			}
 		if (user()->checkAccess($rights, $accessParams) || (sizeof($model) == 1 && user()->checkAccess($modelClass.':Index'))) $this->_items[$type][] = array('label'=>t($title), 'url'=>$action, 'linkOptions'=>$linkOptions);
 	}
 
@@ -117,12 +121,12 @@ class Menu
 		$pluralName = $this->pluralize($name);
 		return array('admin'=>t('Manage '.$pluralName), 'index'=>t('View '.$pluralName), 'update'=>t('Update '.$name), 'view'=>t('View '.$name), 'delete'=>t('Delete '.$name), 'create'=>t('Create '.$name));
 	}
-	
+
 	public function items($type = '')
     {
 		if ($type == '') return $this->_items[($this->moduleId != '' ? $this->moduleId : $this->controllerId)]; else return $this->_items[$type];
     }
-    
+
     protected function pluralize($name)
 	{
 		$rules=array(
@@ -140,7 +144,7 @@ class Menu
 		}
 		return $name.'s';
 	}
-	
+
 	protected function class2name($name,$ucwords=true)
 	{
 		$result=trim(strtolower(str_replace('_',' ',preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name))));

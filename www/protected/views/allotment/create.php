@@ -4,4 +4,4 @@ $this->pageTitle = Yii::app()->name.' - '.Yii::t('app', 'Create Allotment');
 
 <h1><?php echo Yii::t('app', 'Create Allotment'); ?></h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'showUserField'=>$showUserField)); ?>

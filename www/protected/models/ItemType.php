@@ -58,20 +58,20 @@ class ItemType extends ActiveRecord
 				'attributes'=>array(
 					'name',
 					'itemcategory_id'=>array(
-						'asc'=>'itemcategory.name',
-						'desc'=>'itemcategory.name desc',
+						'asc'=>'itemCategory.name',
+						'desc'=>'itemCategory.name desc',
 						),
 					),
 				),
 			'pagination'=>array('pageSize'=>20,),
 		));
 	}
-	
+
 	public function getItemCategory_name()
 	{
 		return $this->itemCategory->name;
 	}
-	
+
 	public function getLongName()
 	{
 		return $this->itemcategory_name.' ('.$this->name.')';

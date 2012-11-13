@@ -12,7 +12,7 @@ class Controller extends CController
 		{
 			$modelClass = ucfirst($this->getId());
 			$route = $modelClass.':'.ucfirst($action->getId());
-			if ($route == 'Site:Error' || $route == 'Site:Login' || $route == 'Site:Logout' || $route == 'Ajax:Setactivetab') 
+			if ($route == 'Site:Error' || $route == 'Site:Login' || $route == 'Site:Logout' || $route == 'Ajax:Setactivetab')
 			{
 				return true;
 			}
@@ -45,7 +45,7 @@ class Controller extends CController
 			}
 		}
     }
-    
+
 	public function ajaxEditForm(&$model, $returnData = array(), $continueController = false)
 	{
 		$saved = false;
@@ -81,11 +81,11 @@ class Controller extends CController
 				if (Yii::app()->getUser()->hasFlash('error.updaterecord')) $msg = Yii::app()->getUser()->getFlash('error.updaterecord');
 			}
 		}
-		
+
 		$this->ajaxEditFormNoScript();
-		
+
 		$a = array('status'=>$status, 'val'=>$this->renderPartial('_form', array('model'=>$model), true, true), 'model'=>$retData, 'msg'=>$msg);
-		
+
 		if ($continueController) return array('saved'=>$saved, 'data'=>$a);
 		else
 		{
@@ -93,7 +93,7 @@ class Controller extends CController
 			Yii::app()->end();
 		}
 	}
-	
+
 	public function ajaxEditFormNoScript()
 	{
 		cs()->scriptMap['jquery.js'] = false;
@@ -103,11 +103,11 @@ class Controller extends CController
 		cs()->scriptMap['jquery-ui-i18n.js'] = false;
 		cs()->scriptMap['jquery-ui-i18n.min.js'] = false;
 	}
-	
+
 	public function insertDialog($params = array(), $enableSelfDialog = false)
 	{
-		$model = ucfirst($this->id);		
-		$items = array_merge(array('User', 'StockActivity'), Menu::$mainMenuItems);	
+		$model = ucfirst($this->id);
+		$items = array_merge(array(), Menu::$mainMenuItems);
 		foreach ($items as $item)
 		{
 			if (!array_key_exists($item, $params)) $params[$item] = array();
@@ -118,7 +118,7 @@ class Controller extends CController
 			$this->widget('wsext.JuiDialogForm', array_merge(array('model'=>$item), $params[$item]));
 		}
 	}
-	
+
 	public function autoCompleteFind($modelClass, $field, $retField = null, $extraCrits = array())
 	{
 		$term = $_GET['term'];
@@ -135,13 +135,13 @@ class Controller extends CController
 			//$model = call_user_func(array($modelClass, 'model'))->findAll($criteria);
 			$model = ActiveRecord::model($modelClass)->findAll($criteria);
 
-			if (!empty($model)) 
+			if (!empty($model))
 			{
 				$out = array();
 				foreach ($model as $m)
 				{
 					$out[] = array(
-					'label' => $m->$retField,  
+					'label' => $m->$retField,
 					'value' => $m->$retField,
 					'id' => $m->id, // return value from autocomplete
 					);
@@ -151,7 +151,7 @@ class Controller extends CController
 			}
 		}
 	}
-	
+
 	public static function IpAddressToNumber($ip)
 	{
 		if ($ip == '') return 0;
@@ -161,12 +161,12 @@ class Controller extends CController
 			if (sizeof($aip) != 4) return 0;
 			else return ($aip[3] + $aip[2] * 256 + $aip[1] * 256 * 256 + $aip[0] * 256 * 256 * 256);
 		}
-	}	
-	
+	}
+
 	public static function IpAddressToText($ip)
 	{
 		if (!$ip) return '0.0.0.0';
-		else 
+		else
 		{
 			for ($i = 3; $i >= 0; $i--)
 			{
@@ -178,7 +178,7 @@ class Controller extends CController
 			return substr($ret, 0, -1);
 		}
 	}
-	
+
 	protected function pluralize($name)
 	{
 		$rules=array(
@@ -196,7 +196,7 @@ class Controller extends CController
 		}
 		return $name.'s';
 	}
-	
+
 	public function class2name($name,$ucwords=true)
 	{
 		$result=trim(strtolower(str_replace('_',' ',preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name))));
@@ -207,7 +207,7 @@ class Controller extends CController
 	{
 		return trim(strtolower(str_replace('_','-',preg_replace('/(?<![A-Z])[A-Z]/', '-\0', $name))),'-');
 	}
-	
+
 	public function class2var($name)
 	{
 			$name[0]=strtolower($name[0]);

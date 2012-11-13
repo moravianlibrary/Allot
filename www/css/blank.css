@@ -35,4 +35,7 @@ legend
     font-weight: bold;
 }
 
-
+.grid-view
+{
+	padding-top: 0px;
+}

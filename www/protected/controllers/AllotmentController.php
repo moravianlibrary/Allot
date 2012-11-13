@@ -5,7 +5,7 @@ class AllotmentController extends Controller
 	public function actionView($id)
 	{
 		$model=Allotment::model()->my()->findByPk($id);
-		
+
 		if (req()->isAjaxRequest)
 		{
 			$this->renderPartial('_view', array('model'=>$model));
@@ -19,16 +19,30 @@ class AllotmentController extends Controller
 	public function actionCreate()
 	{
 		$model=new Allotment;
-		
+
 		if (isset($_GET['item_id'])) $model->item_id = $_GET['item_id'];
-		
-		if (isset($_POST['Allotment']))
+
+		if (isset($_GET['user_id']))
 		{
-			$model->userName = $_POST['Allotment']['userName'];
-			$model->user_id = $this->refreshUser($model->userName);
+			$user = User::model()->findByPk($_GET['user_id']);
+			$model->user_id = $this->refreshUser($user->username);
 			$model->user = User::model()->findByPk($model->user_id);
 		}
-		
+		elseif (isset($_POST['Allotment']))
+			{
+				$model->userName = $_POST['Allotment']['userName'];
+				$model->user_id = $this->refreshUser($model->userName);
+				$model->user = User::model()->findByPk($model->user_id);
+			}
+
+		if(isset($_POST['Allotment']))
+		{
+			$model->attributes = $_POST['Allotment'];
+			$model->allotment_user_id = user()->id;
+			if ($model->returned)
+				$model->return_user_id = user()->id;
+		}
+
 		if (req()->isAjaxRequest)
 		{
 			$this->ajaxEditForm($model, array());
@@ -46,6 +60,7 @@ class AllotmentController extends Controller
 
 			$this->render('create',array(
 				'model'=>$model,
+				'showUserField'=>!isset($_GET['user_id']),
 			));
 		}
 	}
@@ -54,11 +69,24 @@ class AllotmentController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		if (isset($_POST['Allotment']))
+		if (isset($_GET['user_id']))
 		{
-			$model->userName = $_POST['Allotment']['userName'];
-			$model->user_id = $this->refreshUser($model->userName);
+			$user = User::model()->findByPk($_GET['user_id']);
+			$model->user_id = $this->refreshUser($user->username);
 			$model->user = User::model()->findByPk($model->user_id);
+		}
+		elseif (isset($_POST['Allotment']))
+			{
+				$model->userName = $_POST['Allotment']['userName'];
+				$model->user_id = $this->refreshUser($model->userName);
+				$model->user = User::model()->findByPk($model->user_id);
+			}
+
+		if(isset($_POST['Allotment']))
+		{
+			$model->attributes = $_POST['Allotment'];
+			if ($model->returned)
+				$model->return_user_id = user()->id;
 		}
 
 		if (req()->isAjaxRequest)
@@ -78,6 +106,7 @@ class AllotmentController extends Controller
 
 			$this->render('update',array(
 				'model'=>$model,
+				'showUserField'=>!isset($_GET['user_id']),
 			));
 		}
 	}
@@ -136,12 +165,12 @@ class AllotmentController extends Controller
 			Yii::app()->end();
 		}
 	}
-	
+
 	/*
 	public function actionFindUser()
 	{
 		$this->autoCompleteFind('User', 'CONCAT(firstname, \' \', lastname)', 'full_name');
-	}	
+	}
 	*/
 	public function actionFindUser()
 	{
@@ -151,7 +180,7 @@ class AllotmentController extends Controller
 			$ds = $this->ldapConnect();
 			if ($ds)
 			{
-				$sr = ldap_search($ds, param('ldap_users_dn'), '(|(sn=*'.$term.'*)(givenname=*'.$term.'*))', array('uid', 'givenname', 'sn'));
+				$sr = @ldap_search($ds, param('ldap_users_dn'), '(|(sn=*'.$term.'*)(givenname=*'.$term.'*))', array('uid', 'givenname', 'sn'));
 				if ($sr)
 				{
 					$entries = ldap_get_entries($ds, $sr);
@@ -159,12 +188,14 @@ class AllotmentController extends Controller
 					foreach ($entries as $entry)
 					{
 						$out[] = array(
-						'label' => $entry['givenname'][0].' '.$entry['sn'][0],  
+						'label' => $entry['givenname'][0].' '.$entry['sn'][0],
 						'value' => $entry['givenname'][0].' '.$entry['sn'][0],
 						'id' => $entry['uid'][0], // return value from autocomplete
 						);
 					}
 					echo CJSON::encode($out);
+					ldap_close($ds);
+					$ds = null;
 					Yii::app()->end();
 				}
 				ldap_close($ds);
@@ -172,12 +203,12 @@ class AllotmentController extends Controller
 			}
 		}
 	}
-	
+
 	public function actionFindItem()
 	{
 		$this->autoCompleteFind('Item', 'CONCAT(number, \' \', name)', 'longname', array('condition'=>array(array('(count-allotted)', '>0', false))));
 	}
-	
+
 	public function refreshUser($userName)
 	{
 		$user = User::model()->findByAttributes(array('username'=>$userName));
@@ -187,7 +218,7 @@ class AllotmentController extends Controller
 		$ds = $this->ldapConnect();
 		if ($ds)
 		{
-			$sr = ldap_search($ds, param('ldap_users_dn'), '(uid='.$userName.')', array('uid', 'givenname', 'sn', 'mail'));
+			$sr = @ldap_search($ds, param('ldap_users_dn'), '(uid='.$userName.')', array('uid', 'givenname', 'sn', 'mail'));
 			if ($sr)
 			{
 				$entries = ldap_get_entries($ds, $sr);
@@ -195,14 +226,14 @@ class AllotmentController extends Controller
 				{
 					$user->username = $entries[0]['uid'][0];
 					$user->firstname = $entries[0]['givenname'][0];
-					$user->lastname = $entries[0]['sn'][0];			
+					$user->lastname = $entries[0]['sn'][0];
 					$user->email = $entries[0]['mail'][0];
 				}
 			}
 			ldap_close($ds);
 			$ds = null;
 		}
-		
+
 		if ($user !== null)
 		{
 			$user->save();
@@ -214,7 +245,7 @@ class AllotmentController extends Controller
 			return 0;
 		}
 	}
-	
+
 	public function ldapConnect()
 	{
 		$ds = ldap_connect(param('ldap_server'));
